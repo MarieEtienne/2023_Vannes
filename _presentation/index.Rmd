@@ -285,6 +285,36 @@ name:signal
 
  * Change point detection approach. `r Citep(myBib, "patin2019identifying")` based on `r Citep(myBib, "picard2007segmentation")`
 
+<figure>
+  <img src="segmentation.png" alt="at the beginning is" style="width:90%" class = "centerimg" />
+.legend[Segmentation illustration @patin2019identifying]
+</figure>
+
+<figure>
+  <img src="seg_classification.png" alt="at the beginning is" style="width:90%" class = "centerimg" />
+.legend[Segmentation illustration @patin2019identifying]
+</figure>
+]
+
+
+---
+template:signal
+
+
+##  Heterogeneity in movement pattern interpretated as different internal states
+
+.pull-left[
+<figure>
+  <img src="traj_seg_booby.png" alt="at the beginning is" style="width:90%" class = "centerimg" />
+.legend[Peruvian booby  data courtesy of Sophie Bertrand]
+</figure>
+]
+
+.pull-right[
+## Accounting for internal states
+
+ * Change point detection approach. `r Citep(myBib, "patin2019identifying")` based on `r Citep(myBib, "picard2007segmentation")`
+
  * More classically addressed with Hidden Markov Model `r Citep(myBib, c("morales2004extracting", "walker2010pioneer", "gurarie2009novel", "michelot2016movehmm"))`
 ]
 
@@ -360,7 +390,7 @@ $q(x_t, x_{t+s})$ which is not the case in general.
 `r Citet(myBib,'brillinger2002employing')` propose a flexible framework
 $$dX_s = -\nabla H_{\theta}(X_s) ds + \gamma dW_s, \quad X_0=x_0.$$
 
-but no explicit transitions $q_{\theta}(x_t, x_{t+s})$
+but no explicit transitions $q_{\theta}(x_t, x_{t+s}),$ .care[ No explicit likelihood!]
 
 --
 
@@ -369,6 +399,7 @@ In `r Citet(myBib,'Gloaguen2018stochastic')`, as part  of *P. Gloaguen's PhD*, e
 .pull-left[
 <figure>
   <img src="map2.png" alt="at the beginning is" style="width:90%" class = "centerimg" />
+  .legend[One example for $H_{\theta}$]
 </figure>
 ]
 
@@ -379,34 +410,26 @@ In `r Citet(myBib,'Gloaguen2018stochastic')`, as part  of *P. Gloaguen's PhD*, e
 * `r Citep(myBib, 'ozaki1992bridge')` and `r Citet(myBib,'kessler1997estimation')` same results than
 * MCEM based on exact simulation `r Citep(myBib, 'beskos2006exact')` limits the flexibility of the SDE.
 ]
+--
+
+Stationarity, if meaningful the stationnary distribution is given by  
+
+$$\pi_{\theta}(x) \varpropto e^{- \frac{2}{\gamma^2} H_{\theta}(x)}.$$ 
 
 
----
 
 
+<!-- --- -->
 
----
+<!-- # Potential based Diffusions as continuous time movement model  -->
 
-# Potential based Diffusions as continuous time movement model 
-
-## Flexible movement model for habitat preference
-
-<figure>
-  <img src="DAG1.png" alt="at the beginning is" style="width:80%" class = "centerimg" />
-</figure>
+<!-- ## Flexible movement model for habitat preference -->
 
 
----
-
-# Potential based Diffusions as continuous time movement model 
-
-## Flexible movement model for habitat preference
-
-
-<figure>
-  <img src="DAG2.png" alt="at the beginning is" style="width:80%" class = "centerimg" />
-   .legend[Flexible movement model which accounts for environment]
-</figure>
+<!-- <figure> -->
+<!--   <img src="DAG2.png" alt="at the beginning is" style="width:80%" class = "centerimg" /> -->
+<!--    .legend[Flexible movement model which accounts for environment] -->
+<!-- </figure> -->
 
 
 <!-- --- -->
@@ -431,8 +454,6 @@ In `r Citet(myBib,'Gloaguen2018stochastic')`, as part  of *P. Gloaguen's PhD*, e
 A classical choice of **resource selection function**, (i.e stationary distribution including covariates)
 $$\pi{\left(x \vert \theta\right)} \varpropto  \exp\left(\sum_{j=1}^J \theta_j c_j (x) \right). $$ 
 
-Diffusion, under regularity condition admits a stationary  distribution.  
-
 --
 
 Combining the ideas of `r Citep(myBib, "michelot2019linking")`, and  `r Citep(myBib, "brillinger2002employing")` lead to the Langevin diffusion as movement model, 
@@ -444,17 +465,16 @@ Using Euler approximation
 $$	X_{i+1} \vert \lbrace X_i = x_i \rbrace = 
     	x_i + \frac{\gamma^2 \Delta_i}{2} \sum_{j=1}^J \theta_j \nabla c_j(x_i) + \sqrt{\Delta_i}  \varepsilon_{i+1},\quad 
     	\varepsilon_{i+1} \overset{ind}{\sim} N \left( {0} , \gamma^2 \boldsymbol{I}_d \right),$$
-
-leads to a simple linear model published in `r Citet(myBib,"michelot2019langevin")`.
-    	
-    	
-    	
 ---
 
 # Potential based Diffusions as continuous time movement model 
 
 ## Flexible movement model for habitat preference
 
+$${\Delta_i}^{-1/2} 	(X_{i+1} - X_i)  \overset{i.i.d}{\sim} \mathcal{N}\left( Z_i \theta, \gamma^2 I_2\right),$$
+leads to a simple linear model published in `r Citet(myBib,"michelot2019langevin")`.
+    	
+--
 
 .pull-left[
 <figure>
@@ -475,7 +495,9 @@ leads to a simple linear model published in `r Citet(myBib,"michelot2019langevin
 
 --
 
-.small[ On going work on Sea birds in the Mediteranean sea and Roe deer next to Toulouse]
+It is straightforward to consider multiple hidden states assuming that the state is constant over $\Delta_i$:
+
+The derived EM algorithm just requires to fit a weighted linear regression. .small[ On going work on Sea birds in the Mediteranean sea and Roe deer next to Toulouse]
 
 ---
 name: POD
@@ -611,56 +633,26 @@ A Predator - Prey Lokta Volterra model
 .question[Requires a nuclear Power plant to run!]
 
 ]
----
 
-# On going work
-
-### Some natural extension of the Langevin model useful in movement ecology
-
-* Coupling Hidden Markov model or change point detection model with a Langevin distribution:
-<figure>
-  <img src="DAG4.png" alt="at the beginning is" style="width:60%" class = "centerimg" />
-</figure>
-
-* Change the Langevin model for an hypoellitptic approach
-$$d X_t = V_t dt; X_0 =x_0.$$
-
-$$d V_t = - \nabla \log \pi{\left(X_t\right)} \, d t  -\frac{\nu^2}{2} V_t + \nu \,d W_t,\quad $$
 
 ---
 # Perspectives 
 
-### Some natural extension of the Langevin model useful in movement ecology
+## Combining multiple data sources: Popflow <img src="bear.png"style="width:5%">
 
-* Introduction of an individual random effect,
+  * Capture Mark Recapture data for a large number of individuals (ADN sampling in feces)
+  * Few individuals equipped with GPS
+  
 
-###  Handling categorical covariates
-`r Citet(myBib, "lejay2018maximum")` define a threshold diffusion and proposes an ML estimation method. Explore the generalisation to $\mathbb{R}^2$. 
+## Movement on Network  <img src="bike.png"style="width:5%">
+  * Movement model on a network (typically roads)
+  * How to adapt segmentation methods to such data
+  * Citizen science project, massive data .... hum hum
 
-### Longer term perspective
-* Collective movement: Cheaper GPS imply  massive deployment. Invest the area of collective movement analysis.
-* Combined with sound monitoring
-
-### Going away from Markovian model ???
-
-
----
-# A few words to finish
-
-
-* Close interaction with biologist,
-  - it's helpful,
-  - provides exciting statistical problems,
-  - experiment a large diversity of approaches.
-* Hidden variables approach
-  - provide flexible models (spatial abundance, classification in time series, Partially observed SDE)
-  - popularized in Ecology in a Bayesian setting but frequentist approach is also possible
-* The Markovian property
-  - not so realistic,
-  - but a key component in both theoretical approach and computational aspects
-
-
-
+--
+.center[
+.care[Thank you for your attention]
+]
 
 ---
 class: biblio
