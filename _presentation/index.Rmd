@@ -1,7 +1,7 @@
 ---
-title: "(Hidden) Markovian Model for movement ecology "
+title: "Movement Data Analysis : modelling, segmentation and inference "
 author: Marie-Pierre Etienne
-institute: "Processus markoviens, semi-markoviens et leurs applications"
+institute: "Séminaire LMJL"
 date: "2023"
 csl: "../resources/apa-no-doi-no-issue.csl"
 output:
@@ -15,6 +15,9 @@ output:
       countIncrementalSlides: false
       beforeInit: '../courses_tools/resources/collapseoutput.js'
 ---
+
+
+
 # Join work with
 
 .pull-left[
@@ -99,8 +102,6 @@ xaringanExtra::use_fit_screen()
 
 
 # Movement ecology paradigm
-<img class="logopos_right" src="compute.png" style="height:6%">
-<img class="logopos_left" src="paw.png" style="height:7%">
 
 ##  `r Citep(myBib, 'nathan2008movement')` presents individual movement as the results of
 
@@ -193,11 +194,22 @@ t_{n} & (x_n, y_n) & ang_n & sp_n\\\\
 ---
 # Ecological questions 
 
-  
+## Identifying various movement patterns 
 
 .pull-left[
 
-## Behavioural ecology
+Rarely in a supervised context
+
+<figure>
+  <img src="Fishing_Mada.png" alt="Fishing points in Mada" style="width:90%" class = "centerimg" />
+.legend[Peruvian booby  data courtesy of Sophie Bertrand]
+</figure>
+]
+
+
+.pull-left[
+
+Mostly unsupervised
 
 <figure>
   <img src="traj_seg_booby_black.png" alt="at the beginning is" style="width:90%" class = "centerimg" />
@@ -206,20 +218,18 @@ t_{n} & (x_n, y_n) & ang_n & sp_n\\\\
 ]
 
 
-
-
 ---
 # Ecological questions 
 
+## Understanding space use
 
 
 .pull-left[
 
-## Behavioural ecology  
 
 <figure>
-  <img src="traj_seg_booby.png" alt="at the beginning is" style="width:90%" class = "centerimg" />
-.legend[Peruvian booby  data courtesy of Sophie Bertrand]
+  <img src="Dives_furseals.png" alt="at the beginning is" style="width:90%" class = "centerimg" />
+.legend[Spatial dives repartition, from @johnson2011bayesian ]
 </figure>
 ]
 
@@ -227,7 +237,7 @@ t_{n} & (x_n, y_n) & ang_n & sp_n\\\\
 
 .pull-right[
 
-## Habitat preference 
+## and the link with environmentalcharacteristics
 
 <figure>
   <img src="SSL_covs.png" alt="at the beginning is" style="width:100%" class = "centerimg" />
