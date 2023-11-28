@@ -15,38 +15,6 @@ output:
       countIncrementalSlides: false
       beforeInit: '../courses_tools/resources/collapseoutput.js'
 ---
-
-
-
-# Join work with
-
-.pull-left[
-
-## Methods 
-
-* M. Du Roy De Chaumaray,
-* S. El Koleil,
-* P. Gloaguen,  
-* S. Le Corff, 
-* M. Marbac-Lourdelle
-* A. Martin,
-* T. Michelot, 
-* J. Olsson,
-
-]
-
-.pull-right[
-
-## Applications
-
-* M. Authier,
-* T. Hoch,
-* N. Morellet,
-* S. Mahévas,
-* R. Patin,
-* E. Rivot.
-]
----
 name: intro
 
 <!-- F1D763 -->
@@ -105,14 +73,14 @@ xaringanExtra::use_fit_screen()
 
 ##  `r Citep(myBib, 'nathan2008movement')` presents individual movement as the results of
 
-.pull-left[
+.left-column[
 <figure>
   <img src="nathan_fig.png" alt="at the beginning is" style="width:100%" class = "centerimg" />
 </figure>
 .legend[  Movement drivers by `r Citet(myBib, "nathan2008movement")` ]
 ]
 
-.pull-right[
+.right-column[
 
 * Motion capacities
 * Internal state
@@ -202,7 +170,7 @@ Rarely in a supervised context
 
 <figure>
   <img src="Fishing_Mada.png" alt="Fishing points in Mada" style="width:90%" class = "centerimg" />
-.legend[Peruvian booby  data courtesy of Sophie Bertrand]
+.legend[Artisanal fishing trips in Toliara, Madagascar]
 </figure>
 ]
 
@@ -228,8 +196,8 @@ Mostly unsupervised
 
 
 <figure>
-  <img src="Dives_furseals.png" alt="at the beginning is" style="width:90%" class = "centerimg" />
-.legend[Spatial dives repartition, from @johnson2011bayesian ]
+  <img src="Dives_furseals.png" alt="at the beginning is" style="width:100%" class = "centerimg" />
+.legend[Spatial dives repartition, from `r Citep(myBib, "johnson2011bayesian")` ]
 </figure>
 ]
 
@@ -287,12 +255,12 @@ name:signal
 
 <figure>
   <img src="segmentation.png" alt="at the beginning is" style="width:90%" class = "centerimg" />
-.legend[Segmentation illustration @patin2019identifying]
+.legend[Segmentation illustration `r Citep(myBib, "patin2019identifying")`]
 </figure>
 
 <figure>
   <img src="seg_classification.png" alt="at the beginning is" style="width:90%" class = "centerimg" />
-.legend[Segmentation illustration @patin2019identifying]
+.legend[Segmentation - classification illustration`r Citep(myBib, "patin2019identifying")`]
 </figure>
 ]
 
@@ -592,8 +560,7 @@ template: POD3
 
 ### Main problem
 Backward smoothing requires to sample an ancestor (value of $j$) with weights:
-$${\Lambda_{k-1}^{j,i}}= \frac{{\hat{\omega}_{k-1}^j}q^\theta(\xi_{k-1}^j,\xi_k^i, \Delta_{k-1})}
-{\sum_{\ell=1}^N {\hat{\omega}_{k-1}^\ell} q^\theta(\xi_{k-1}^\ell,\xi_k^i, \Delta_{k-1})}.$$
+$${\Lambda_{k-1}^{j,i}}\varpropto {\hat{\omega}_{k-1}^j}q^\theta(\xi_{k-1}^j,\xi_k^i, \Delta_{k-1}).$$
 
 The probability of $\xi_{k-1}^j$ being the ancestor of $\xi_{k}^i$ under the true dynamics
 
@@ -604,20 +571,45 @@ Use the unbiased estimator $\class{orange}{\hat{q}^\theta(\xi_{k-1}^{j},\xi_k^i,
 $${\hat{\Lambda}_{k-1}^{j,i}}= \frac{\hat{\omega}_{k-1}^j\class{orange}{\hat{q}^\theta(\xi_{k-1}^{j},\xi_k^i, \Delta_{k-1}, \zeta_i)}}{\sum_{\ell=1}^N \hat{\omega}_{k-1}^\ell \class{orange}{\hat{q}^\theta(\xi_{k-1}^{j},\xi_k^i, \Delta_{k-1}, \zeta_i)}}$$
 
 But  $\mathbb{E}({\hat{\Lambda}_{k-1}^{j,i}}) \ne {\Lambda}_{k-1}^{j,i},$ because of the ratio.
+---
+
+template: POD3
+
+The Acceptance Rejection tricks used in standard SSM `r Citep(myBib,"douc2011sequential")`
+
+### First ingredient 
+
+.care[Assumption:] $\exists \class{orange}{\hat{\sigma}_{k,+}}$ such that $\forall x,y,~0< \class{orange}{\hat{q}^\theta(x,y,\Delta_k,\zeta_k)}< \class{orange}{\hat{\sigma}_{k,+}}$  a.s.
+
+Consider the random variable $\class{bleu}{\widehat{J}}$ defined as follow:
+
+* Sample $J_{cand}\in 1,\dots, N$ with probabilities  $\propto {\{\hat{\omega}_{k-1}^i\}_{i=1,\dots,N}}$;
+* Sample $\class{orange}{\zeta_{k-1}}$ using the GPE of `r Citep(myBib, "fearnhead2008particle")`;
+* Sample $U\sim \mathcal{U}[0,1]$; 
+* IF $U \leq \frac{\class{orange}{\hat{q}^\theta(\xi_{k-1}^{J_{cand}},\xi_{k}^i,\Delta_{k-1},\zeta_{k-1})}}{\class{orange}{\hat{\sigma}_{k-1,+}}}$
+  + Set $\class{bleu}{\widehat{J}}=J_{cand}$ 
+  + ELSE Try Again;
+
+--
+
+### Second ingredient 
+from `r Citep(myBib, "olsson2017efficient")`
+
+* PaRIS algorithm : an Online procedure without a backward pass for additive functional 
+$$\sum_{k=0}^{n-1}\mathbb{E}( h(X_k, X_{k+1}) \vert Y_{0:n})$$
+
+
 
 ---
 template: POD3
 
 ## The final strategy 
 
-* The particle-based, rapid incremental smoother (PaRIS)  algorithm `r Citep(myBib, "olsson2017efficient")` provides  an online smoother using a rewriting of the Backward weight and an acceptation/rejection mechanism but depends on $q(\xi_{k-1}, \xi_{k})$
-
 * The generalized random PaRIS algorithm, in  `r Citep(myBib, "gloaguen2018online")`, samples using an AR algorithm to avoid the normalisation step  and  an importance sampling approach in `r Citep(myBib, "martin2023backward")`
 
----
-template: POD3
+-- 
 
-A Predator - Prey Lokta Volterra model
+Example from a Predator - Prey Lokta Volterra model
 
 .pull-left[
 
@@ -652,6 +644,36 @@ A Predator - Prey Lokta Volterra model
 --
 .center[
 .care[Thank you for your attention]
+]
+
+---
+# Join work with
+
+.pull-left[
+
+## Methods 
+
+* M. Du Roy De Chaumaray,
+* S. El Koleil,
+* P. Gloaguen,  
+* S. Le Corff, 
+* M. Marbac-Lourdelle
+* A. Martin,
+* T. Michelot, 
+* J. Olsson,
+
+]
+
+.pull-right[
+
+## Applications
+
+* M. Authier,
+* T. Hoch,
+* N. Morellet,
+* S. Mahévas,
+* R. Patin,
+* E. Rivot.
 ]
 
 ---
