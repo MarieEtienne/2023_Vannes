@@ -365,7 +365,9 @@ template:signal
 ]
 
 
-Inference with EM algorithm.
+Inference with the EM algorithm, example the estimation of the mean of normal distribution 
+`$$\hat{\theta_i}^{s+1}= \frac{1}{\sum_{k=1}^{n}\tau_{ik}^s} \tau_{ik}^s Y_k, \quad \tau_{ik}^s =P_{\theta^s}(X_k=i\vert Y_{0:n})$$`
+
 
 --
 
@@ -577,9 +579,12 @@ leads to a simple linear model published in &lt;a name=cite-michelot2019langevin
 
 --
 
-It is straightforward to consider multiple hidden states assuming that the state is constant over `\(\Delta_i\)`:
+Straightforward to consider a HMM  assuming that the state is constant over `\(\Delta_i\)`:
 
-The derived EM algorithm just requires to fit a weighted linear regression. .small[ On going work on Sea birds in the Mediteranean sea and Roe deer next to Toulouse]
+The derived EM algorithm just requires to fit a weighted linear regression with weight `\(\class{rouge}{\tau_{ik}^s =P_{\theta^s}(X_k=i\vert Y_{0:n})}.\)`
+
+
+.small[ On going work on Sea birds in the Mediteranean sea and Roe deer next to Toulouse]
 
 ---
 name: POD
