@@ -1,0 +1,1025 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Movement Data Analysis : modelling, segmentation and inference</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Marie-Pierre Etienne" />
+    <meta name="date" content="2023-01-01" />
+    <script src="libs/header-attrs-2.11/header-attrs.js"></script>
+    <link href="libs/remark-css-0.0.1/metropolis.css" rel="stylesheet" />
+    <script src="libs/xaringanExtra_fit-screen-0.2.6/fit-screen.js"></script>
+    <link rel="stylesheet" href="mpe_pres.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+# Movement Data Analysis : modelling, segmentation and inference
+### Marie-Pierre Etienne
+### 8èmes Rencontres : Mer et Littoraux
+### 2023
+
+---
+
+name: intro
+
+&lt;!-- F1D763 --&gt;
+&lt;!-- F7A913 --&gt;
+&lt;!-- C94326 --&gt;
+&lt;!-- 1F908E --&gt;
+&lt;!-- 33658A --&gt;
+
+
+
+
+
+
+
+&lt;!-- # Why do I enjoy research in statistics  ? --&gt;
+&lt;!-- -- --&gt;
+
+
+
+&lt;!-- &lt;div class= "addspace"&gt; --&gt;
+&lt;!-- &lt;li&gt; Working with researchers from different background,&lt;/li&gt; --&gt;
+&lt;!-- &lt;/div&gt; --&gt;
+
+&lt;!-- &lt;div class= "addspace"&gt; --&gt;
+&lt;!-- &lt;li&gt; Never left the school system, &lt;/li&gt; --&gt;
+&lt;!-- &lt;/div&gt; --&gt;
+
+
+&lt;!-- &lt;div class= "addspace"&gt; --&gt;
+&lt;!-- &lt;li&gt; Continnuously learning new concepts, methods, tools  &lt;/li&gt; --&gt;
+&lt;!-- &lt;/div&gt; --&gt;
+
+&lt;!-- &lt;div class= "addspace"&gt; --&gt;
+&lt;!-- &lt;li&gt; being confortable with my inside geek part.  &lt;/li&gt; --&gt;
+&lt;!-- &lt;/div&gt; --&gt;
+
+
+
+# Movement ecology paradigm
+
+##  &lt;a name=cite-nathan2008movement&gt;&lt;/a&gt;([Nathan, Getz, Revilla, et al., 2008](#bib-nathan2008movement)) presents individual movement as the results of
+
+.left-column[
+&lt;figure&gt;
+  &lt;img src="nathan_fig.png" alt="at the beginning is" style="width:100%" class = "centerimg" /&gt;
+&lt;/figure&gt;
+.legend[  Movement drivers by [Nathan, Getz, Revilla, et al. (2008)](#bib-nathan2008movement) ]
+]
+
+.right-column[
+
+* Motion capacities
+* Internal state
+* Environment
+]
+  
+--
+
+.question[Movement informs on internal states and habitat preferences]
+
+---
+name: move2data
+# From Movement to Movement data
+
+
+--
+
+
+.pull-left[
+&lt;figure&gt;
+  &lt;img src="path_1.png" alt="at the beginning is" style="width:100%" class = "centerimg" /&gt;
+&lt;/figure&gt;
+]
+
+---
+template: move2data
+count: false
+
+
+.pull-left[
+&lt;figure&gt;
+  &lt;img src="path_2.png" alt="at the beginning is" style="width:100%" class = "centerimg" /&gt;
+&lt;/figure&gt;
+]
+
+
+---
+template: move2data
+count: false
+
+
+.pull-left[
+&lt;figure&gt;
+  &lt;img src="path_3.png" alt="at the beginning is" style="width:100%" class = "centerimg" /&gt;
+&lt;/figure&gt;
+]
+
+---
+template: move2data
+count: false
+
+
+.pull-left[
+&lt;figure&gt;
+  &lt;img src="path_p3.png" alt="at the beginning is" style="width:100%" class = "centerimg" /&gt;
+&lt;/figure&gt;
+]
+
+--
+
+.pull-right[
+A continuous process sampled at some discrete potentially irregular times.
+
+Time series with values in `\(\mathbb{R}^2\)` (on earth ...).
+
+`$$\begin{array}\\ 
+ \mbox{Time} &amp; \mbox{Location} &amp; \mbox{Turning angle} &amp; \mbox{Speed}\\
+t_{0} &amp; (x_0, y_0) &amp; NA &amp; NA\\
+t_{1} &amp; (x_1, y_1) &amp; NA &amp; sp_1\\
+t_{2} &amp; (x_2, y_2) &amp; ang_2 &amp; sp_2\\
+\vdots &amp; \vdots&amp; \vdots&amp; \vdots \\
+t_{n} &amp; (x_n, y_n) &amp; ang_n &amp; sp_n\\\\
+\end{array}$$`
+]
+
+
+
+
+---
+# Ecological questions 
+
+## Identifying various movement patterns 
+
+.pull-left[
+
+Rarely in a supervised context
+
+&lt;figure&gt;
+  &lt;img src="Fishing_Mada.png" alt="Fishing points in Mada" style="width:90%" class = "centerimg" /&gt;
+.legend[Artisanal fishing trips in Toliara, Madagascar]
+&lt;/figure&gt;
+]
+
+
+.pull-left[
+
+Mostly unsupervised
+
+&lt;figure&gt;
+  &lt;img src="traj_seg_booby_black.png" alt="at the beginning is" style="width:90%" class = "centerimg" /&gt;
+.legend[Peruvian booby  data courtesy of Sophie Bertrand]
+&lt;/figure&gt;
+]
+
+
+---
+# Ecological questions 
+
+## Understanding space use
+
+
+.pull-left[
+
+
+&lt;figure&gt;
+  &lt;img src="Dives_furseals.png" alt="at the beginning is" style="width:100%" class = "centerimg" /&gt;
+.legend[Spatial dives repartition, from &lt;a name=cite-johnson2011bayesian&gt;&lt;/a&gt;([Johnson, London, and Kuhn, 2011](#bib-johnson2011bayesian)) ]
+&lt;/figure&gt;
+]
+
+--
+
+.pull-right[
+
+## and the link with environmental characteristics
+
+&lt;figure&gt;
+  &lt;img src="SSL_covs.png" alt="at the beginning is" style="width:100%" class = "centerimg" /&gt;
+.legend[Sea Lions habitat description]
+&lt;/figure&gt;
+]
+
+
+
+---
+name: data2model
+# From Movement Data to Movement Model
+
+--
+
+Often analysed using discrete time model  &lt;a name=cite-mcclintock2014discrete&gt;&lt;/a&gt;([McClintock, Johnson, Hooten, et al., 2014](#bib-mcclintock2014discrete))
+
+--
+
+&lt;figure&gt;
+  &lt;img src="move_decomposition.png" alt="at the beginning is" style="width:90%" class = "centerimg" /&gt;
+.legend[Movement decomposition]
+&lt;/figure&gt;
+
+
+
+
+---
+name:signal
+
+# Signal processing methods 
+
+--
+
+##  Heterogeneity in movement pattern interpretated as different internal states
+
+.pull-left[
+&lt;figure&gt;
+  &lt;img src="traj_seg_booby.png" alt="at the beginning is" style="width:90%" class = "centerimg" /&gt;
+.legend[Peruvian booby  data courtesy of Sophie Bertrand]
+&lt;/figure&gt;
+
+&lt;figure&gt;
+  &lt;img src="move_decomposition.png" alt="at the beginning is" style="width:50%" class = "centerimg" /&gt;
+.legend[Movement decomposition]
+&lt;/figure&gt;
+
+]
+
+--
+
+.pull-right[
+![](index_files/figure-html/illust_profil_1-1.png)&lt;!-- --&gt;
+
+]
+
+
+
+---
+template:signal
+
+
+##  Heterogeneity in movement pattern interpretated as different internal states
+
+.pull-left[
+&lt;figure&gt;
+  &lt;img src="traj_seg_booby.png" alt="at the beginning is" style="width:90%" class = "centerimg" /&gt;
+.legend[Peruvian booby  data courtesy of Sophie Bertrand]
+&lt;/figure&gt;
+
+&lt;figure&gt;
+  &lt;img src="move_decomposition.png" alt="at the beginning is" style="width:50%" class = "centerimg" /&gt;
+.legend[Movement decomposition]
+&lt;/figure&gt;
+
+]
+
+
+
+.pull-right[
+![](index_files/figure-html/illust_profil_2-1.png)&lt;!-- --&gt;
+]
+
+---
+template:signal
+
+.pull-left[
+## Accounting for internal states
+
+ * Change point detection approach. &lt;a name=cite-patin2019identifying&gt;&lt;/a&gt;([Patin, Etienne, Lebarbier, et al., 2019](#bib-patin2019identifying)) based on &lt;a name=cite-picard2007segmentation&gt;&lt;/a&gt;([Picard, Robin, Lebarbier, et al., 2007](#bib-picard2007segmentation))
+
+&lt;figure&gt;
+  &lt;img src="segmentation.png" alt="at the beginning is" style="width:90%" class = "centerimg" /&gt;
+.legend[Segmentation illustration ([Patin, Etienne, Lebarbier, et al., 2019](#bib-patin2019identifying))]
+&lt;/figure&gt;
+
+]
+
+.pull-left[
+
+`$$\left .\begin{array}{c}
+Y_{1k} \sim f(\theta_{1\ell})\\
+Y_{2k} \sim f(\theta_{2\ell})
+\end{array} \right\rbrace \mbox{ if } k \mbox{ in region }I_{\ell}=[\tau_{\ell-1}+1,\tau_{\ell}]$$`
+
+The best segmentation for a given number of change points L:
+$$argmin_{0&lt; \tau_1 &lt; \ldots &lt; \tau_L} C(\boldsymbol{Y}) $$
+--
+Brute force  complexity : `\(O(N^L)\)`,
+
+Dynamic Programming algorithm complexity : `\(O(N^2)\)` or even less with pruning strategy
+
+
+Limitation in the choice for `\(f.\)`
+]
+
+
+---
+template:signal
+
+.pull-left[
+## Accounting for internal states
+
+ * Change point detection approach. ([Patin, Etienne, Lebarbier, et al., 2019](#bib-patin2019identifying)) based on ([Picard, Robin, Lebarbier, et al., 2007](#bib-picard2007segmentation))
+
+
+&lt;figure&gt;
+  &lt;img src="seg_classification.png" alt="at the beginning is" style="width:90%" class = "centerimg" /&gt;
+.legend[Segmentation - classification illustration([Patin, Etienne, Lebarbier, et al., 2019](#bib-patin2019identifying))]
+&lt;/figure&gt;
+]
+
+.pull-left[
+
+`$$\left .\begin{array}{c}
+Y_{1k} \sim f(\theta_{1a})\\
+Y_{2k} \sim f(\theta_{2a})
+\end{array} \right\rbrace \mbox{ if } k \mbox{ in }I_{\ell}, \mbox{ and } S_l = a$$`
+
+
+Dynamic Programming algorithm and mixture model. 
+
+]
+
+---
+template:signal
+
+
+##  Heterogeneity in movement pattern interpretated as different internal states
+
+
+
+.left-column[
+## Accounting for internal states
+
+ * More classically addressed with Hidden Markov Model &lt;a name=cite-morales2004extracting&gt;&lt;/a&gt;&lt;a name=cite-walker2010pioneer&gt;&lt;/a&gt;&lt;a name=cite-gurarie2009novel&gt;&lt;/a&gt;&lt;a name=cite-michelot2016movehmm&gt;&lt;/a&gt;([Morales, Haydon, Frair, et al., 2004](#bib-morales2004extracting); [Walker and Bez, 2010](#bib-walker2010pioneer); [Gurarie, Andrews, and Laidre, 2009](#bib-gurarie2009novel); [Michelot, Langrock, and Patterson, 2016](#bib-michelot2016movehmm))
+
+&lt;figure&gt;
+  &lt;img src="HMM_DAG.png" alt="at the beginning is" style="width:100%" class = "centerimg" /&gt;
+&lt;/figure&gt; 
+
+]
+
+.right-column[
+`$$Y_k \vert S_{k} = i \overset{i.i.d}{\sim} \mathcal{L}(\theta_i),$$`
+`$$S_0 \sim \nu_0, \quad \mathbb{P}(S_k =j \vert S_{k-1} = i) = \pi_{ij}$$`
+]
+
+
+Inference with EM algorithm.
+
+--
+
+In ([Michelot, Langrock, and Patterson, 2016](#bib-michelot2016movehmm)), 
+
+`$$\mathbb{P}(S_k =j \vert S_k = i, Cov_{i}) \propto \exp \left \lbrace \beta Cov_i \right \rbrace$$`
+
+
+---
+template: signal
+
+### Choosing the number of hidden states
+
+* Typically using likelihood based criteria  AIC, BIC ICL 
+
+
+.question[&lt;a name=cite-pohle2017selecting&gt;&lt;/a&gt;([Pohle, Langrock, Van Beest, et al., 2017](#bib-pohle2017selecting)) advocate that likelihood based criteria tend to overestimate the number of components and this number should be chosen according to biological considerations.]
+
+
+The main suspect : the strong parametric form of the emission model in classical HMM model in ecology 
+
+
+
+.pull-left[
+&lt;figure&gt;
+  &lt;img src="p1.png" alt="at the beginning is" style="width:90%" class = "centerimg" /&gt;
+&lt;/figure&gt; 
+]
+
+--
+.pull-right[
+&lt;figure&gt;
+  &lt;img src="p2.png" alt="at the beginning is" style="width:90%" class = "centerimg" /&gt;
+&lt;/figure&gt; 
+]
+
+--
+
+A new hope: new non parametric approaches have been proposed &lt;a name=cite-lehericy2019consistent&gt;&lt;/a&gt;&lt;a name=cite-dechaumaray2022estimation&gt;&lt;/a&gt;([Lehéricy, 2019](#bib-lehericy2019consistent); [ Du Roy De Chaumaray, El Kolei, Etienne, et al., 2023](#bib-dechaumaray2022estimation))
+
+
+---
+
+# Movement path is more than time series, importance of considering the space.
+
+
+.center[.care[Proposing ecologically meaningful movement models]]
+
+Pros and cons of  Discrete time versus continuous time movement models  discussed in [McClintock, Johnson, Hooten, et al. (2014)](#bib-mcclintock2014discrete) 
+
+.pull-left[ Discrete time models
+
+* .bleu[Simple models,]
+* .bleu[Numerous well established methods,]
+* .rouge[Interpretation depends on the sampling process,]
+* .rouge[Coping with Irregular sampling is not straightforward.]
+
+
+
+]
+
+.pull-right[
+Continuous time models
+
+* .rouge[Complex models,]
+* .rouge[Inference not so easy,]
+* .bleu[Interpretation independant  from the sampling process,]
+* .bleu[Irregular sampling is theoretically straightforward.]
+
+]
+---
+
+# Potential based Diffusions as continuous time movement model 
+
+Let  `\((X_s)_{s\geq0}\in\mathbb{R}^2\)` denote the position at time `\(s\)`.
+
+.pull-left[
+* Brownian motion: a pure diffusion model
+`$$dX_s = dW_s, \quad X_0=x_0.$$`
+&lt;figure&gt;
+  &lt;img src="bm.png" alt="at the beginning is" style="width:60%" class = "centerimg" /&gt;
+&lt;/figure&gt;
+]
+
+--
+.pull-left[
+* Ornstein Uhlenbeck process: central place behavior
+`$$dX_s = -B (X_s- \mu) ds + dW_s, \quad X_0=x_0.$$`
+
+&lt;figure&gt;
+  &lt;img src="ou.png" alt="at the beginning is" style="width:60%" class = "centerimg" /&gt;
+&lt;/figure&gt;
+]
+
+
+Popular models as  Brownian Motion and Ornstein Uhlenbeck have known transition densities 
+`\(q(x_t, x_{t+s})\)` which is not the case in general.
+
+---
+
+
+# Potential based Diffusions as continuous time movement model 
+
+&lt;a name=cite-brillinger2002employing&gt;&lt;/a&gt;[Brillinger, Preisler, Ager, et al. (2002)](#bib-brillinger2002employing) propose a flexible framework
+`$$dX_s = -\nabla H_{\theta}(X_s) ds + \gamma dW_s, \quad X_0=x_0.$$`
+
+but no explicit transitions `\(q_{\theta}(x_t, x_{t+s}),\)` .care[ No explicit likelihood!]
+
+--
+
+In &lt;a name=cite-Gloaguen2018stochastic&gt;&lt;/a&gt;[Gloaguen, Etienne, and Le Corff (2018a)](#bib-Gloaguen2018stochastic), as part  of *P. Gloaguen's PhD*, explore `\(H_{\theta}(X_s) = \sum_{k=1}^K \pi_k \varphi_k(X_s),\)`
+
+.pull-left[
+&lt;figure&gt;
+  &lt;img src="map2.png" alt="at the beginning is" style="width:90%" class = "centerimg" /&gt;
+  .legend[One example for `\(H_{\theta}\)`]
+&lt;/figure&gt;
+]
+
+--
+
+.pull-right[
+* Euler approximation : biased estimates with low frequency data
+* &lt;a name=cite-ozaki1992bridge&gt;&lt;/a&gt;([Ozaki, 1992](#bib-ozaki1992bridge)) and &lt;a name=cite-kessler1997estimation&gt;&lt;/a&gt;[Kessler (1997)](#bib-kessler1997estimation) same results than
+* MCEM based on exact simulation &lt;a name=cite-beskos2006exact&gt;&lt;/a&gt;([Beskos, Papaspiliopoulos, Roberts, et al., 2006](#bib-beskos2006exact)) limits the flexibility of the SDE.
+]
+--
+
+Stationarity, if meaningful the stationnary distribution is given by  
+
+`$$\pi_{\theta}(x) \varpropto e^{- \frac{2}{\gamma^2} H_{\theta}(x)}.$$` 
+
+
+
+
+&lt;!-- --- --&gt;
+
+&lt;!-- # Potential based Diffusions as continuous time movement model  --&gt;
+
+&lt;!-- ## Flexible movement model for habitat preference --&gt;
+
+
+&lt;!-- &lt;figure&gt; --&gt;
+&lt;!--   &lt;img src="DAG2.png" alt="at the beginning is" style="width:80%" class = "centerimg" /&gt; --&gt;
+&lt;!--    .legend[Flexible movement model which accounts for environment] --&gt;
+&lt;!-- &lt;/figure&gt; --&gt;
+
+
+&lt;!-- --- --&gt;
+&lt;!-- template: movement --&gt;
+&lt;!-- ## Flexible movement model --&gt;
+
+&lt;!-- &lt;figure&gt; --&gt;
+&lt;!--   &lt;img src="DAG3.png" alt="at the beginning is" style="width:80%" class = "centerimg" /&gt; --&gt;
+&lt;!--    &lt;figcaption&gt; Flexible non homogeneous movement model&lt;/figcaption&gt; --&gt;
+&lt;!-- &lt;/figure&gt; --&gt;
+
+
+
+
+
+---
+
+# Potential based Diffusions as continuous time movement model 
+
+## Flexible movement model for habitat preference
+
+A classical choice of **resource selection function**, (i.e stationary distribution including covariates)
+$$\pi{\left(x \vert \theta\right)} \varpropto  \exp\left(\sum_{j=1}^J \theta_j c_j (x) \right). $$ 
+
+--
+
+Combining the ideas of &lt;a name=cite-michelot2019linking&gt;&lt;/a&gt;([Michelot, Blackwell, and Matthiopoulos, 2019](#bib-michelot2019linking)), and  ([Brillinger, Preisler, Ager, et al., 2002](#bib-brillinger2002employing)) lead to the Langevin diffusion as movement model, 
+`$$d X_t = \frac{\gamma^2}{2} \nabla \log \pi_{\theta}{\left(X_t\right)} \, d t + \gamma \,d W_t,\quad X_0 =x_0.$$`
+--
+
+Using Euler approximation 
+
+`$$	X_{i+1} \vert \lbrace X_i = x_i \rbrace = 
+    	x_i + \frac{\gamma^2 \Delta_i}{2} \sum_{j=1}^J \theta_j \nabla c_j(x_i) + \sqrt{\Delta_i}  \varepsilon_{i+1},\quad 
+    	\varepsilon_{i+1} \overset{ind}{\sim} N \left( {0} , \gamma^2 \boldsymbol{I}_d \right),$$`
+---
+
+# Potential based Diffusions as continuous time movement model 
+
+## Flexible movement model for habitat preference
+
+`$${\Delta_i}^{-1/2} 	(X_{i+1} - X_i)  \overset{i.i.d}{\sim} \mathcal{N}\left( Z_i \theta, \gamma^2 I_2\right),$$`
+leads to a simple linear model published in &lt;a name=cite-michelot2019langevin&gt;&lt;/a&gt;[Michelot, Etienne, Blackwell, et al. (2019)](#bib-michelot2019langevin).
+    	
+--
+
+.pull-left[
+&lt;figure&gt;
+  &lt;img src="SSL_covs.png" alt="at the beginning is" style="width:100%" class = "centerimg" /&gt;
+.legend[Sea Lions habitat description]
+&lt;/figure&gt;
+]
+
+--
+
+.pull-right[
+
+&lt;figure&gt;
+  &lt;img src="SSL_logUD.png" alt="at the beginning is" style="width:100%" class = "centerimg" /&gt;
+.legend[Sea Lions habitat description]
+&lt;/figure&gt;
+]
+
+--
+
+It is straightforward to consider multiple hidden states assuming that the state is constant over `\(\Delta_i\)`:
+
+The derived EM algorithm just requires to fit a weighted linear regression. .small[ On going work on Sea birds in the Mediteranean sea and Roe deer next to Toulouse]
+
+---
+name: POD
+# Potential based Diffusions as continuous time movement model 
+&lt;img class="logopos_right" src="compute.png" style="height:6%"&gt;
+&lt;img class="logopos_left" src="paw.png" style="height:7%"&gt;
+
+
+## Partially observed SDE 
+.pull-left[
+  &lt;img src="path_4.png" alt="at the beginning is" style="width:70%" class = "centerimg" /&gt;
+]
+
+
+.pull-right[
+
+Let  `\(Y_k\)` be the recorded position `\(s_k\)`, a noisy observation of the true position `\(X_k\)`:
+
+`$$dX_s = b_{\theta}(X_s) ds + \gamma dW_s, \quad X_0=x_0;$$`
+`$$Y_k \overset{ind}{\sim} g_{\theta_o} (X_k).$$`
+]
+
+--
+
+&lt;figure&gt;
+  &lt;img src="DAG.png" alt="at the beginning is" style="width:80%" class = "centerimg" /&gt;
+.legend[DAG representation]
+&lt;/figure&gt;
+
+
+---
+template:POD
+
+### Estimation key quantity : additive smoothing distributions in E Step
+
+`$$\sum_{k=0}^{n-1}\mathbb{E}( h(X_k, X_{k+1}) \vert Y_{0:n})$$`
+---
+name: POD2
+# Potential based Diffusions as continuous time movement model 
+&lt;img class="logopos_right" src="compute.png" style="height:6%"&gt;
+&lt;img class="logopos_left" src="paw.png" style="height:7%"&gt;
+
+## Sequential method for fltering distribution : `\(\mathbb{E}( M(X_k) \vert Y_{0:k})\)`.
+
+--
+&lt;figure&gt;
+  &lt;img src="Filter.png" alt="at the beginning is" style="width:80%" class = "centerimg" /&gt;
+.legend[Particle Filter]
+&lt;/figure&gt;
+
+---
+template: POD2
+
+###  The problem with POD processes
+
+* `\(q^\theta(x, y, \Delta)\)` can't be computed (even when `\(\theta\)` is known);
+* This quantity is crucial for weights computation.
+
+--
+
+### General Poisson estimator ( &lt;a name=cite-fearnhead2008particle&gt;&lt;/a&gt;[Fearnhead, Papaspiliopoulos, and Roberts (2008)](#bib-fearnhead2008particle) )
+
+Under some assumptions, there exists an unbiased estimator `\(\class{\orange}{\hat{q}^\theta(x_k,x_{k+1},\Delta_k,\zeta_k)}\)` such that 
+
+`$$\class{orange}{\hat{q}^\theta(x_k,x_{k+1},\Delta_k,\zeta_k)}&gt;0\text{ and } \mathbb{E}[\class{orange}{\hat{q}^\theta(x_k,x_{k+1},\Delta_k,\zeta_k)}] =q^\theta(x_k,x_{k+1},\Delta_k)$$`
+
+`\(\class{orange}{\zeta_k}\)` is a random variable requiring simulation of constrained Brownian bridges.
+--
+
+ 
+### New filtering weights
+`\({\omega_k^i=\frac{g_1^\theta(\xi_k^i)q^\theta(\xi_{k-1}^{I_{k}^i},\xi_k^i, \Delta_{k-1})}{p^\theta(\xi_{k-1}^{I_{k-1}^i},\xi_k^i, \Delta_{k-1})}}\)` is replaced by `\(\class{orange}{\hat{\omega}_k^i}=\frac{g_1^\theta(\xi_k^i)\class{orange}{\hat{q}^\theta(\xi_{k-1}^{I_{k}^i},\xi_k^i, \Delta_{k-1}, \zeta_{k-1})}}{p^\theta(\xi_{k-1}^{I_{k-1}^i},\xi_k^i, \Delta_{k-1})}\)` 
+
+---
+name: POD3
+# Potential based Diffusions as continuous time movement model 
+&lt;img class="logopos_right" src="compute.png" style="height:6%"&gt;
+&lt;img class="logopos_left" src="paw.png" style="height:7%"&gt;
+
+## Sequential method for smoothing distribution : `\(\mathbb{E}( h(X_k, X_{k+1} ) \vert Y_{0:k})\)`.
+
+--
+
+&lt;figure&gt;
+  &lt;img src="Smoother_sampling.png" alt="at the beginning is" style="width:80%" class = "centerimg" /&gt;
+.legend[Particle Filter]
+&lt;/figure&gt;
+
+---
+template: POD3
+
+
+### Main problem
+Backward smoothing requires to sample an ancestor (value of `\(j\)`) with weights:
+`$${\Lambda_{k-1}^{j,i}}\varpropto {\hat{\omega}_{k-1}^j}q^\theta(\xi_{k-1}^j,\xi_k^i, \Delta_{k-1}).$$`
+
+The probability of `\(\xi_{k-1}^j\)` being the ancestor of `\(\xi_{k}^i\)` under the true dynamics
+
+--
+
+### The solution? (When `\(q^\theta\)` can't be computed) 
+Use the unbiased estimator `\(\class{orange}{\hat{q}^\theta(\xi_{k-1}^{j},\xi_k^i, \Delta_{k-1}, \zeta_i)}\)` as a substitute:
+`$${\hat{\Lambda}_{k-1}^{j,i}}= \frac{\hat{\omega}_{k-1}^j\class{orange}{\hat{q}^\theta(\xi_{k-1}^{j},\xi_k^i, \Delta_{k-1}, \zeta_i)}}{\sum_{\ell=1}^N \hat{\omega}_{k-1}^\ell \class{orange}{\hat{q}^\theta(\xi_{k-1}^{j},\xi_k^i, \Delta_{k-1}, \zeta_i)}}$$`
+
+But  `\(\mathbb{E}({\hat{\Lambda}_{k-1}^{j,i}}) \ne {\Lambda}_{k-1}^{j,i},\)` because of the ratio.
+---
+
+template: POD3
+
+The Acceptance Rejection tricks used in standard SSM &lt;a name=cite-douc2011sequential&gt;&lt;/a&gt;([Douc, Garivier, Moulines, et al., 2011](#bib-douc2011sequential))
+
+### First ingredient 
+
+.care[Assumption:] `\(\exists \class{orange}{\hat{\sigma}_{k,+}}\)` such that `\(\forall x,y,~0&lt; \class{orange}{\hat{q}^\theta(x,y,\Delta_k,\zeta_k)}&lt; \class{orange}{\hat{\sigma}_{k,+}}\)`  a.s.
+
+Consider the random variable `\(\class{bleu}{\widehat{J}}\)` defined as follow:
+
+* Sample `\(J_{cand}\in 1,\dots, N\)` with probabilities  `\(\propto {\{\hat{\omega}_{k-1}^i\}_{i=1,\dots,N}}\)`;
+* Sample `\(\class{orange}{\zeta_{k-1}}\)` using the GPE of ([Fearnhead, Papaspiliopoulos, and Roberts, 2008](#bib-fearnhead2008particle));
+* Sample `\(U\sim \mathcal{U}[0,1]\)`; 
+* IF `\(U \leq \frac{\class{orange}{\hat{q}^\theta(\xi_{k-1}^{J_{cand}},\xi_{k}^i,\Delta_{k-1},\zeta_{k-1})}}{\class{orange}{\hat{\sigma}_{k-1,+}}}\)`
+  + Set `\(\class{bleu}{\widehat{J}}=J_{cand}\)` 
+  + ELSE Try Again;
+
+--
+
+### Second ingredient 
+from &lt;a name=cite-olsson2017efficient&gt;&lt;/a&gt;([Olsson and Westerborn, 2017](#bib-olsson2017efficient))
+
+* PaRIS algorithm : an Online procedure without a backward pass for additive functional 
+`$$\sum_{k=0}^{n-1}\mathbb{E}( h(X_k, X_{k+1}) \vert Y_{0:n})$$`
+
+
+
+---
+template: POD3
+
+## The final strategy 
+
+* The generalized random PaRIS algorithm, in  &lt;a name=cite-gloaguen2018online&gt;&lt;/a&gt;([Gloaguen, Etienne, and Le Corff, 2018b](#bib-gloaguen2018online)), samples using an AR algorithm to avoid the normalisation step  and  an importance sampling approach in &lt;a name=cite-martin2023backward&gt;&lt;/a&gt;([Martin, Étienne, Gloaguen, et al., 2023](#bib-martin2023backward))
+
+--
+
+Example from a Predator - Prey Lokta Volterra model
+
+.pull-left[
+
+&lt;figure&gt;
+  &lt;img src="Hares.png" alt="at the beginning is" style="width:100%" class = "centerimg" /&gt;
+.legend[Smoothing distribution for a POD Lokta Volterra]
+&lt;/figure&gt;
+]
+
+--
+
+.pull-right[
+.question[Requires a nuclear Power plant to run!]
+
+.question[La peste ou le cholera ?]
+
+Simple and scalable methods are needed.
+]
+
+
+---
+# Perspectives 
+
+## Combining multiple data sources: Popflow &lt;img src="bear.png"style="width:5%"&gt;
+
+  * Capture Mark Recapture data for a large number of individuals (ADN sampling in feces)
+  * Few individuals equipped with GPS
+  
+
+## Movement on Network  &lt;img src="bike.png"style="width:5%"&gt;
+  * Movement model on a network (typically roads)
+  * How to adapt segmentation methods to such data
+  * Citizen science project, massive data .... hum hum
+
+--
+.center[
+.care[Thank you for your attention]
+]
+
+---
+# Join work with
+
+.pull-left[
+
+## Methods 
+
+* M. Du Roy De Chaumaray,
+* S. El Koleil,
+* .rouge[P. Gloaguen],  
+* S. Le Corff, 
+* M. Marbac-Lourdelle
+* A. Martin,
+* T. Michelot, 
+* J. Olsson,
+
+]
+
+.pull-right[
+
+## Applications
+
+* M. Authier,
+* T. Hoch,
+* N. Morellet,
+* S. Mahévas,
+* R. Patin,
+* .rouge[E. Rivot].
+]
+
+---
+class: biblio
+# Bibliography
+&lt;img class="logopos_right" src="article.png" style="height:6%"&gt;
+
+&lt;a name=bib-dechaumaray2022estimation&gt;&lt;/a&gt;[ Du Roy De Chaumaray, M., S.
+El Kolei, M. Etienne, et al.](#cite-dechaumaray2022estimation) (2023).
+_Estimation of the Order of Non-Parametric Hidden Markov Models using
+the Singular Values of an Integral Operator_. arXiv: 2210.03559
+[math.ST].
+
+&lt;a name=bib-beskos2006exact&gt;&lt;/a&gt;[Beskos, A., O. Papaspiliopoulos, G. O.
+Roberts, et al.](#cite-beskos2006exact) (2006). "Exact and
+computationally efficient likelihood-based estimation for discretely
+observed diffusion processes (with discussion)". In: _Journal of the
+Royal Statistical Society: Series B (Statistical Methodology)_ 68.3,
+pp. 333-382.
+
+&lt;a name=bib-brillinger2002employing&gt;&lt;/a&gt;[Brillinger, D. R., H. K.
+Preisler, A. A. Ager, et al.](#cite-brillinger2002employing) (2002).
+"Employing stochastic differential equations to model wildlife motion".
+In: _Bulletin of the Brazilian Mathematical Society_ 33.3, pp. 385-408.
+
+&lt;a name=bib-douc2011sequential&gt;&lt;/a&gt;[Douc, R., A. Garivier, E. Moulines,
+et al.](#cite-douc2011sequential) (2011). "Sequential Monte Carlo
+smoothing for general state space hidden Markov models".
+
+&lt;a name=bib-fearnhead2008particle&gt;&lt;/a&gt;[Fearnhead, P., O.
+Papaspiliopoulos, and G. Roberts](#cite-fearnhead2008particle) (2008).
+"Particle filters for partially observed diffusions". In: _J. Roy.
+Statist. Soc. Ser. B_ 70.4, pp. 755-777.
+
+&lt;a name=bib-gloaguen2018online&gt;&lt;/a&gt;[Gloaguen, P., M. Etienne, and S. Le
+Corff](#cite-gloaguen2018online) (2018b). "Online sequential Monte
+Carlo smoother for partially observed diffusion processes". In:
+_EURASIP Journal on Advances in Signal Processing_ 2018.1, p. 9.
+
+&lt;a name=bib-Gloaguen2018stochastic&gt;&lt;/a&gt;[Gloaguen, P., M. Etienne, and
+S. Le Corff](#cite-Gloaguen2018stochastic) (2018a). "Stochastic
+differential equation based on a multimodal potential to model movement
+data in ecology". In: _Journal of the Royal Statistical Society: Series
+C (Applied Statistics)_ 67.3, pp. 599-619. DOI:
+[10.1111/rssc.12251](https://doi.org/10.1111%2Frssc.12251).
+
+---
+class: biblio
+count: false
+# Bibliography
+&lt;img class="logopos_right" src="article.png" style="height:6%"&gt;
+
+&lt;a name=bib-gurarie2009novel&gt;&lt;/a&gt;[Gurarie, E., R. D. Andrews, and K. L.
+Laidre](#cite-gurarie2009novel) (2009). "A novel method for identifying
+behavioural changes in animal movement data". In: _Ecology Letters_
+12.5, pp. 395-408.
+
+&lt;a name=bib-johnson2011bayesian&gt;&lt;/a&gt;[Johnson, D. S., J. M. London, and
+C. E. Kuhn](#cite-johnson2011bayesian) (2011). "Bayesian inference for
+animal space use and other movement metrics". In: _Journal of
+agricultural, biological, and environmental statistics_ 16, pp.
+357-370.
+
+&lt;a name=bib-kessler1997estimation&gt;&lt;/a&gt;[Kessler,
+M.](#cite-kessler1997estimation) (1997). "Estimation of an ergodic
+diffusion from discrete observations". In: _Scandinavian Journal of
+Statistics_ 24.2, pp. 211-229.
+
+&lt;a name=bib-lehericy2019consistent&gt;&lt;/a&gt;[Lehéricy,
+L.](#cite-lehericy2019consistent) (2019). "Consistent order estimation
+for nonparametric hidden Markov models". In: _Bernoulli_ 25, pp.
+464–-498.
+
+&lt;a name=bib-martin2023backward&gt;&lt;/a&gt;[Martin, A., M. Étienne, P.
+Gloaguen, et al.](#cite-martin2023backward) (2023). "Backward
+Importance Sampling for Online Estimation of State Space Models". In:
+_Journal of Computational and Graphical Statistics_ 0.0, pp. 1-14. DOI:
+[10.1080/10618600.2023.2174125](https://doi.org/10.1080%2F10618600.2023.2174125).
+
+&lt;a name=bib-mcclintock2014discrete&gt;&lt;/a&gt;[McClintock, B. T., D. S.
+Johnson, M. B. Hooten, et al.](#cite-mcclintock2014discrete) (2014).
+"When to be discrete: the importance of time formulation in
+understanding animal movement". In: _Movement Ecology_ 2.1, p. 21.
+
+&lt;a name=bib-michelot2019linking&gt;&lt;/a&gt;[Michelot, T., P. G. Blackwell, and
+J. Matthiopoulos](#cite-michelot2019linking) (2019). "Linking resource
+selection and step selection models for habitat preferences in
+animals". In: _Ecology_ 100.1.
+
+
+---
+class: biblio
+count: false
+# Bibliography
+&lt;img class="logopos_right" src="article.png" style="height:6%"&gt;
+
+&lt;a name=bib-michelot2019langevin&gt;&lt;/a&gt;[Michelot, T., M. Etienne, P.
+Blackwell, et al.](#cite-michelot2019langevin) (2019). "The Langevin
+diffusion as a continuous-time model of animal movement and habitat
+selection". In: _Methods in Ecology and Evolution_.
+
+&lt;a name=bib-michelot2016movehmm&gt;&lt;/a&gt;[Michelot, T., R. Langrock, and T.
+A. Patterson](#cite-michelot2016movehmm) (2016). "moveHMM: an R package
+for the statistical modelling of animal movement data using hidden
+Markov models". In: _Methods in Ecology and Evolution_ 7.11, pp.
+1308-1315.
+
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script src="../courses_tools/resources/collapseoutput.js"></script>
+<script>var slideshow = remark.create({
+"ratio": "16:10",
+"highlightStyle": "github",
+"highlightLines": true,
+"countIncrementalSlides": false
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>
