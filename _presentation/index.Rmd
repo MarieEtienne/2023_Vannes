@@ -827,10 +827,10 @@ Simple and scalable methods are needed.
 ## Methods 
 
 * M. Du Roy De Chaumaray,
-* S. El Koleil,
+* .rouge[S. El Koleil],
 * .rouge[P. Gloaguen],  
 * S. Le Corff, 
-* M. Marbac-Lourdelle
+* .rouge[M. Marbac-Lourdelle],
 * A. Martin,
 * T. Michelot, 
 * J. Olsson,
