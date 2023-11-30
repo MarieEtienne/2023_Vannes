@@ -1,7 +1,7 @@
 ---
 title: "Movement Data Analysis : modelling, segmentation and inference "
 author: Marie-Pierre Etienne
-institute: "Séminaire LMJL"
+institute: "8èmes Rencontres : Mer et Littoraux"
 date: "2023"
 csl: "../resources/apa-no-doi-no-issue.csl"
 output:
@@ -25,7 +25,10 @@ name: intro
 
 
 
-```{r setup, include = FALSE,  eval = TRUE}
+```{r setup, include = FALSE,  eval = TRUE, message=FALSE, include=FALSE}
+library(tidyverse)
+library(wesanderson)
+library(ggpubr)
 library('RefManageR')
 main_dir <-  '..'
 common_img_dir <- file.path(main_dir,'courses_tools','resources', 'common_figs')
@@ -205,7 +208,7 @@ Mostly unsupervised
 
 .pull-right[
 
-## and the link with environmentalcharacteristics
+## and the link with environmental characteristics
 
 <figure>
   <img src="SSL_covs.png" alt="at the beginning is" style="width:100%" class = "centerimg" />
@@ -237,6 +240,7 @@ Often analysed using discrete time model  `r Citep(myBib, "mcclintock2014discret
 name:signal
 
 # Signal processing methods 
+
 --
 
 ##  Heterogeneity in movement pattern interpretated as different internal states
@@ -246,23 +250,43 @@ name:signal
   <img src="traj_seg_booby.png" alt="at the beginning is" style="width:90%" class = "centerimg" />
 .legend[Peruvian booby  data courtesy of Sophie Bertrand]
 </figure>
+
+<figure>
+  <img src="move_decomposition.png" alt="at the beginning is" style="width:50%" class = "centerimg" />
+.legend[Movement decomposition]
+</figure>
+
 ]
+
+--
 
 .pull-right[
-## Accounting for internal states
+```{r illust_profil_1, echo = FALSE}
+set.seed(6)
+N <- 200
+change.point <- round(cumsum(rexp(N, rate = 0.03)+10))
+change.point <- change.point[which(change.point<N)]
 
- * Change point detection approach. `r Citep(myBib, "patin2019identifying")` based on `r Citep(myBib, "picard2007segmentation")`
+## state sequence 
+l1 <- Reduce("+", lapply(c(1,change.point), function(d){
+ return( 1*(d<=(1:N) ))}))
 
-<figure>
-  <img src="segmentation.png" alt="at the beginning is" style="width:90%" class = "centerimg" />
-.legend[Segmentation illustration `r Citep(myBib, "patin2019identifying")`]
-</figure>
+Nchange <- length(change.point)
+mu_1 <-rnorm(Nchange+1, mean=5, sd=2)
+mu_2 <-rnorm(Nchange+1, mean=0, sd=pi/4)
+sigma_1 <- 1/rgamma(Nchange+1, shape = 20,rate = 10)                                  
+sigma_2 <- 1/rgamma(Nchange+1, shape = 40,rate = 20)                                  
+signal_1 <- rnorm(N, mean=mu_1[l1], sd=sigma_1[l1])
+signal_2 <- rnorm(N, mean=mu_2[l1], sd=sigma_2[l1])
+traj_dta <- tibble(desc1 =signal_1, desc2= signal_2, seg = l1, index = 1:N) %>% mutate(mu1 = mu_1[l1], mu2 =mu_2[l1])
+p1 <- traj_dta %>%  ggplot() + aes(x= index, y =desc1) + geom_point(col= "#C94326") + xlab("")
+p2 <- traj_dta %>%  ggplot() + aes(x= index, y =desc2) + geom_point(col= "#33658A") + xlab("")
+p_complete <-ggarrange(p1,p2, nrow = 2 )
+p_complete
+```
 
-<figure>
-  <img src="seg_classification.png" alt="at the beginning is" style="width:90%" class = "centerimg" />
-.legend[Segmentation - classification illustration`r Citep(myBib, "patin2019identifying")`]
-</figure>
 ]
+
 
 
 ---
@@ -276,18 +300,113 @@ template:signal
   <img src="traj_seg_booby.png" alt="at the beginning is" style="width:90%" class = "centerimg" />
 .legend[Peruvian booby  data courtesy of Sophie Bertrand]
 </figure>
+
+<figure>
+  <img src="move_decomposition.png" alt="at the beginning is" style="width:50%" class = "centerimg" />
+.legend[Movement decomposition]
+</figure>
+
 ]
 
+
+
 .pull-right[
+```{r illust_profil_2, echo = FALSE}
+p1_2 <- p1 + geom_line(aes(x=index, y = mu1), col = "#C94326" )
+p2_2 <-  p2 + geom_line(aes(x=index, y = mu2), col = "#33658A" )
+p_complete_2 <-ggarrange(p1_2,p2_2, nrow = 2 )
+p_complete_2
+```
+]
+
+---
+template:signal
+
+.pull-left[
 ## Accounting for internal states
 
  * Change point detection approach. `r Citep(myBib, "patin2019identifying")` based on `r Citep(myBib, "picard2007segmentation")`
 
- * More classically addressed with Hidden Markov Model `r Citep(myBib, c("morales2004extracting", "walker2010pioneer", "gurarie2009novel", "michelot2016movehmm"))`
+<figure>
+  <img src="segmentation.png" alt="at the beginning is" style="width:90%" class = "centerimg" />
+.legend[Segmentation illustration `r Citep(myBib, "patin2019identifying")`]
+</figure>
+
 ]
 
+.pull-left[
+
+$$\left .\begin{array}{c}
+Y_{1k} \sim f(\theta_{1\ell})\\
+Y_{2k} \sim f(\theta_{2\ell})
+\end{array} \right\rbrace \mbox{ if } k \mbox{ in region }I_{\ell}=[\tau_{\ell-1}+1,\tau_{\ell}]$$
+
+The best segmentation for a given number of change points L:
+$$argmin_{0< \tau_1 < \ldots < \tau_L} C(\boldsymbol{Y}) $$
+--
+Brute force  complexity : $O(N^L)$,
+
+Dynamic Programming algorithm complexity : $O(N^2)$ or even less with pruning strategy
+
+
+Limitation in the choice for $f.$
+]
+
+
+---
+template:signal
+
+.pull-left[
+## Accounting for internal states
+
+ * Change point detection approach. `r Citep(myBib, "patin2019identifying")` based on `r Citep(myBib, "picard2007segmentation")`
+
+
+<figure>
+  <img src="seg_classification.png" alt="at the beginning is" style="width:90%" class = "centerimg" />
+.legend[Segmentation - classification illustration`r Citep(myBib, "patin2019identifying")`]
+</figure>
+]
+
+.pull-left[
+
+$$\left .\begin{array}{c}
+Y_{1k} \sim f(\theta_{1a})\\
+Y_{2k} \sim f(\theta_{2a})
+\end{array} \right\rbrace \mbox{ if } k \mbox{ in }I_{\ell}, \mbox{ and } S_l = a$$
+
+
+Dynamic Programming algorithm and mixture model. 
+
+]
+
+---
+template:signal
+
+
+##  Heterogeneity in movement pattern interpretated as different internal states
+
+
+
+.left-column[
+## Accounting for internal states
+
+ * More classically addressed with Hidden Markov Model `r Citep(myBib, c("morales2004extracting", "walker2010pioneer", "gurarie2009novel", "michelot2016movehmm"))`
+
+<figure>
+  <img src="HMM_DAG.png" alt="at the beginning is" style="width:100%" class = "centerimg" />
+</figure> 
+
+]
+
+.right-column[
 $$Y_k \vert S_{k} = i \overset{i.i.d}{\sim} \mathcal{L}(\theta_i),$$
-$$S_0 \sim \nu_0, \quad \mathbb{P}(S_k =j \vert S_k = i) = \pi_{ij}$$
+$$S_0 \sim \nu_0, \quad \mathbb{P}(S_k =j \vert S_{k-1} = i) = \pi_{ij}$$
+]
+
+
+Inference with EM algorithm.
+
 --
 
 In `r Citep(myBib, c( "michelot2016movehmm"))`, 
@@ -308,20 +427,66 @@ template: signal
 
 The main suspect : the strong parametric form of the emission model in classical HMM model in ecology 
 
+
+```{r, echo = FALSE, message=FALSE, warning=FALSE}
+dta <- tibble(x=rgamma(5000, shape=0.1, rate = 0.01)+
+                rnorm(5000, mean =10, sd=5)
+                )   %>% arrange(x) %>% rowid_to_column() %>% mutate(cl=ifelse(rowid< 800*5, 1, 2))
+theta <- dta %>% group_by(cl) %>% summarize(m = mean(x), s = sd(x))
+p1 <- dta %>% ggplot() + aes(x=x) + geom_histogram(aes(y = after_stat(density)), alpha = 0.5, bins =60) 
+ggsave(filename = "p1.png", width = 10, height = 6)
+p2 <- p1 +
+  stat_function(fun = dnorm, args = list(mean = theta$m[1], sd = theta$s[1]), col = "#C94326") +
+  stat_function(fun = dnorm, args = list(mean = theta$m[2], sd = theta$s[2]), col = "#33658A") 
+ggsave(filename = "p2.png", width = 10, height = 6)  
+```
+.pull-left[
+<figure>
+  <img src="p1.png" alt="at the beginning is" style="width:90%" class = "centerimg" />
+</figure> 
+]
+
+--
+.pull-right[
+<figure>
+  <img src="p2.png" alt="at the beginning is" style="width:90%" class = "centerimg" />
+</figure> 
+]
+
 --
 
 A new hope: new non parametric approaches have been proposed `r Citep(myBib, "lehericy2019consistent", "dechaumaray2022estimation")`
 
 
---
+---
 
-.question[Movement path is more than time series, importance of considering the space.]
+# Movement path is more than time series, importance of considering the space.
 
 
 .center[.care[Proposing ecologically meaningful movement models]]
 
 Pros and cons of  Discrete time versus continuous time movement models  discussed in `r Citet(myBib, 'mcclintock2014discrete')` 
 
+.pull-left[ Discrete time models
+
+* .bleu[Simple models,]
+* .bleu[Numerous well established methods,]
+* .rouge[Interpretation depends on the sampling process,]
+* .rouge[Coping with Irregular sampling is not straightforward.]
+
+
+
+]
+
+.pull-right[
+Continuous time models
+
+* .rouge[Complex models,]
+* .rouge[Inference not so easy,]
+* .bleu[Interpretation independant  from the sampling process,]
+* .bleu[Irregular sampling is theoretically straightforward.]
+
+]
 ---
 
 # Potential based Diffusions as continuous time movement model 
@@ -530,7 +695,7 @@ template: POD2
 
 Under some assumptions, there exists an unbiased estimator $\class{\orange}{\hat{q}^\theta(x_k,x_{k+1},\Delta_k,\zeta_k)}$ such that 
 
-$$\class{\orange}{\hat{q}^\theta(x_k,x_{k+1},\Delta_k,\zeta_k)}>0\text{ and } \mathbb{E}[\class{orange}{\hat{q}^\theta(x_k,x_{k+1},\Delta_k,\zeta_k)}] =q^\theta(x_k,x_{k+1},\Delta_k)$$
+$$\class{orange}{\hat{q}^\theta(x_k,x_{k+1},\Delta_k,\zeta_k)}>0\text{ and } \mathbb{E}[\class{orange}{\hat{q}^\theta(x_k,x_{k+1},\Delta_k,\zeta_k)}] =q^\theta(x_k,x_{k+1},\Delta_k)$$
 
 $\class{orange}{\zeta_k}$ is a random variable requiring simulation of constrained Brownian bridges.
 --
@@ -607,7 +772,7 @@ template: POD3
 
 * The generalized random PaRIS algorithm, in  `r Citep(myBib, "gloaguen2018online")`, samples using an AR algorithm to avoid the normalisation step  and  an importance sampling approach in `r Citep(myBib, "martin2023backward")`
 
--- 
+--
 
 Example from a Predator - Prey Lokta Volterra model
 
@@ -624,6 +789,9 @@ Example from a Predator - Prey Lokta Volterra model
 .pull-right[
 .question[Requires a nuclear Power plant to run!]
 
+.question[La peste ou le cholera ?]
+
+Simple and scalable methods are needed.
 ]
 
 
@@ -655,7 +823,7 @@ Example from a Predator - Prey Lokta Volterra model
 
 * M. Du Roy De Chaumaray,
 * S. El Koleil,
-* P. Gloaguen,  
+* .rouge[P. Gloaguen],  
 * S. Le Corff, 
 * M. Marbac-Lourdelle
 * A. Martin,
@@ -673,7 +841,7 @@ Example from a Predator - Prey Lokta Volterra model
 * N. Morellet,
 * S. Mahévas,
 * R. Patin,
-* E. Rivot.
+* .rouge[E. Rivot].
 ]
 
 ---
